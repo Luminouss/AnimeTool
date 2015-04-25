@@ -80,6 +80,7 @@ int GraphicManager::InitializeGraphics()
 	SDL_FillRect(screen, NULL, backgroundColor);//Background
 	SDL_FillRect(screen, &titlebar, titlebarColor);//Titlebar
 
+
 	return 0;
 }
 
