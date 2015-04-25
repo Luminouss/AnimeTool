@@ -3,20 +3,14 @@
 #include "WindowManager.h"
 
 
-GraphicManager::GraphicManager()
-{
-	winManager = NULL;
-	screen = NULL;
-}
-
-void GraphicManager::setup(WindowManager* manager)
+GraphicManager::GraphicManager(WindowManager* manager)
 {
 	winManager = manager;
-
-
+	screen = NULL;
 
 	InitializeGraphics();
 }
+
 
 GraphicManager::~GraphicManager()
 {
