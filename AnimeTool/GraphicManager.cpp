@@ -14,6 +14,7 @@ GraphicManager::GraphicManager(WindowManager* manager)
 
 GraphicManager::~GraphicManager()
 {
+	SDL_FreeSurface(screen);
 }
 
 SDL_Surface* GraphicManager::loadImage(std::string filename)
@@ -79,15 +80,30 @@ int GraphicManager::InitializeGraphics()
 	SDL_FillRect(screen, NULL, backgroundColor);//Background
 	SDL_FillRect(screen, &titlebar, titlebarColor);//Titlebar
 
+	return 0;
+}
 
+int GraphicManager::Update()
+{
 	//Update Screen
 	if (SDL_Flip(screen) == -1)
 		return 1;
-
-	SDL_Delay(2500);
-
-	//End programm
-	SDL_FreeSurface(screen);
-
 	return 0;
+}
+
+void GraphicManager::Shutdown()
+{
+	backgroundColor = NULL;
+	titlebarColor = NULL;
+	flags = NULL;
+
+	if (winManager != NULL){
+		winManager = NULL;
+		delete(winManager);
+	}
+
+
+	screen = NULL;
+	delete(screen);
+
 }

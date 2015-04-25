@@ -9,7 +9,6 @@ int main(int argc, char* args[])
 {
 	WindowManager* winManager = new WindowManager();
 
-
 	SDL_Quit();
 	return 0;
 }
