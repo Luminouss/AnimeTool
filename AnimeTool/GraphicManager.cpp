@@ -94,4 +94,6 @@ int GraphicManager::InitializeGraphics()
 
 	//End programm
 	SDL_FreeSurface(screen);
+
+	return 0;
 }
