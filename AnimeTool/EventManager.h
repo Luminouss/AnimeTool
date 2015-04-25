@@ -31,6 +31,7 @@ private:
 	//Variables
 public:
 	bool Quit = false;
+	bool dragging = false;
 
 private:
 	SDL_Event e;

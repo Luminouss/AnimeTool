@@ -37,6 +37,24 @@ void EventManager::handleEvent()
 
 			}
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (e.button.button == SDL_BUTTON_LEFT)
+			{
+				if (e.button.y >= 0 && e.button.y <= 35)
+				{
+					dragging = true;
+				}
+			}
+		case SDL_MOUSEBUTTONUP:
+			if (e.button.button == SDL_BUTTON_LEFT)
+			{
+				dragging = false;
+			}
+		case SDL_MOUSEMOTION:
+			if (dragging)
+			{
+				winManager->dragWindow(e.motion.x, e.motion.y);
+			}
 		//case ANYTHING ELSE
 		}
 	}
