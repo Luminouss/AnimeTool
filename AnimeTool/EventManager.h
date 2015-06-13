@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 class WindowManager;
+class GraphicManager;
 
 enum KeyPressSurfaces
 {
@@ -20,7 +21,7 @@ class EventManager
 {
 //Functions
 public:
-	EventManager(WindowManager*);
+	EventManager(WindowManager*, GraphicManager*);
 	~EventManager();
 
 	void handleEvent();
@@ -36,6 +37,7 @@ public:
 private:
 	SDL_Event e;
 	WindowManager* winManager = NULL;
+	GraphicManager* gManager = NULL;
 };
 
 #endif

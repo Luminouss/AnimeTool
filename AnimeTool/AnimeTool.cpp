@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "WindowManager.h"
-#include "sdl.h"
 
 int main(int argc, char* args[])
 {

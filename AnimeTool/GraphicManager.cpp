@@ -1,20 +1,19 @@
 #include "stdafx.h"
 #include "GraphicManager.h"
 #include "WindowManager.h"
+#include "Surface.h"
 
 
 GraphicManager::GraphicManager(WindowManager* manager)
 {
 	winManager = manager;
-	screen = NULL;
-
+	surface = NULL;
 	InitializeGraphics();
 }
 
 
 GraphicManager::~GraphicManager()
 {
-	SDL_FreeSurface(screen);
 }
 
 SDL_Surface* GraphicManager::loadImage(std::string filename)
@@ -60,26 +59,21 @@ int GraphicManager::InitializeGraphics()
 		return 1;
 
 	//Setup the Screen
-	screen = SDL_SetVideoMode(winManager->SCREEN_WIDTH, winManager->SCREEN_HEIGHT, winManager->SCREEN_BPP, SDL_SWSURFACE | SDL_NOFRAME);
+	surface = new Surface();
 
-	//Check if screen had errors in the initialization
-	if (screen == NULL)
+	if (!surface->setupSurface(winManager->SCREEN_WIDTH, winManager->SCREEN_HEIGHT, winManager->SCREEN_BPP, SDL_SWSURFACE | SDL_NOFRAME))
 		return 1;
 
 
 	//Load Images and Colors
-	backgroundColor = SDL_MapRGBA(screen->format, 30, 30, 30, 255);
-	titlebarColor = SDL_MapRGBA(screen->format, 45, 45, 48, 255);
+	backgroundColor = SDL_MapRGBA(surface->getSurface()->format, 30, 30, 30, 255);
 
-	//setup rectangles
-	titlebar.x = titlebar.y = 0;
-	titlebar.w = screen->w;
-	titlebar.h = 35;
 
-	//Set Window Properties
-	SDL_FillRect(screen, NULL, backgroundColor);//Background
-	SDL_FillRect(screen, &titlebar, titlebarColor);//Titlebar
-
+	//Setup rectangles
+	surface->addRect("titlebar", 0, 0, surface->getSurface()->w, 35, 45, 45, 48, 255);
+	surface->addRect("exitbutton", winManager->SCREEN_WIDTH - 40,0 , 40, 35, 255, 0, 0, 255);
+	
+	FillRects();
 
 	return 0;
 }
@@ -87,8 +81,10 @@ int GraphicManager::InitializeGraphics()
 int GraphicManager::Update()
 {
 	//Update Screen
-	if (SDL_Flip(screen) == -1)
+	if (SDL_Flip(surface->getSurface()) == -1)
 		return 1;
+
+	//printf("Updated Screen");
 	return 0;
 }
 
@@ -104,7 +100,26 @@ void GraphicManager::Shutdown()
 	}
 
 
-	screen = NULL;
-	delete(screen);
+	surface = NULL;
+	delete(surface);
 
+}
+
+
+int GraphicManager::FillRects()
+{
+	SDL_FillRect(surface->getSurface(), NULL, backgroundColor);//Background
+
+	std::vector<Rect*> temprects = surface->getRect();
+	for (size_t i = 0; i < temprects.size(); i++)
+	{
+		surface->fillRect(temprects[i]);
+	}
+	
+	return 1;
+}
+
+Surface* GraphicManager::getSurface()
+{
+	return surface;
 }

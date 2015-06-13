@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "EventManager.h"
 #include "WindowManager.h"
+#include "GraphicManager.h"
+
+#include <iostream>
 
 
-EventManager::EventManager(WindowManager* manager)
+
+EventManager::EventManager(WindowManager* manager, GraphicManager* graphics)
 {
 	winManager = manager;
-
+	gManager = graphics;
 	InitializeEventManager();
 }
 
@@ -40,21 +44,40 @@ void EventManager::handleEvent()
 		case SDL_MOUSEBUTTONDOWN:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				if (e.button.y >= 0 && e.button.y <= 35)
+				int x = e.button.x;
+				int y = e.button.y;
+				Surface* surface = gManager->getSurface();
+
+				if (surface->collideMR(x, y, surface->getRectName("titlebar")))
 				{
-					dragging = true;
+					if (surface->collideMR(x, y, surface->getRectName("exitbutton")))
+					{
+						Quit = true;
+						break;
+					}
+
+					if (!dragging)
+					{
+						dragging = true;
+						winManager->saveOldMousePositionsWindow();
+						printf("start dragging the window\n");
+					}
 				}
+				//if (e.button.y >= 0 && e.button.y <= 35)
+				//{
+				//}
 			}
+			break;
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_LEFT)
 			{
-				dragging = false;
+				if (dragging)
+				{
+					dragging = false;
+					printf("stopped dragging the window\n");
+				}
 			}
-		case SDL_MOUSEMOTION:
-			if (dragging)
-			{
-				winManager->dragWindow(e.motion.x, e.motion.y);
-			}
+			break;
 		//case ANYTHING ELSE
 		}
 	}
